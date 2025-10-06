@@ -144,3 +144,24 @@ function limpiarCampos() {
   internoSeleccionado = null;
 }
 window.limpiarCampos = limpiarCampos;
+async function verificarChoferYEnviar() {
+  try {
+    const usuarioActual = usuarioLogueado?.trim();
+    if (!usuarioActual) {
+      alert("No se detectó tu nombre de usuario.");
+      return;
+    }
+    const choferesRef = collection(db, "choferes");
+    const q = query(choferesRef, where("usuario", "==", usuarioActual));
+    const snapshot = await getDocs(q);
+    if (snapshot.empty) {
+      alert("🚫 Tu no formas parte de la Empresa.");
+      return;
+    }
+    await enviarPlanilla();
+  } catch (err) {
+    console.error("Error al verificar chofer:", err);
+    alert("Hubo un error al verificar tu cuenta. Intenta nuevamente.");
+  }
+}
+window.verificarChoferYEnviar = verificarChoferYEnviar;
