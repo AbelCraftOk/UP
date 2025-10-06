@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Union Platense</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <style>
+        body {
+            margin: 0;
+            background: linear-gradient(135deg, #ff6600, #ff3300);
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+
+        .logo-grande {
+            width: 180px;
+            margin-bottom: 20px;
+        }
+
+        .recuadro {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 12px;
+            width: 300px;
+            text-align: center;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        input {
+            width: 90%;
+            padding: 8px;
+            border: none;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            background: #fff;
+            color: #ff3300;
+            font-weight: bold;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 90%;
+            margin-top: 8px;
+        }
+
+        button:hover {
+            background: #ffcc99;
+        }
+
+        .separador {
+            height: 2px;
+            background: white;
+            margin: 10px 0;
+        }
+
+        .menu {
+            position: fixed;
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.9);
+            padding: 30px;
+            border-radius: 15px;
+            color: white;
+            text-align: center;
+            z-index: 10;
+            width: 70%;
+        }
+
+        h1, h2, p {
+            margin: 8px 0;
+        }
+
+        .pestania {
+            width: 100%;
+            height: 100vh;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+
+        .pestania.activa {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #chofer {
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 30px;
+    padding-top: 50px;
+    overflow-y: auto;
+}
+
+#chofer .recuadro {
+    width: 80%;
+    max-width: 700px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    text-align: left;
+    gap: 10px;
+}
+
+    </style>
+</head>
+<body>
+    <section id="login" class="pestania activa">
+        <img src="logo2.png" class="logo-grande" alt="Logo Union Platense">
+        <div class="recuadro">
+            <h2>Login</h2>
+            <p>Introduzca su usuario (relacionado a DC)</p>
+            <input type="text" id="user-login" placeholder="Usuario">
+            <p>Introduzca su contraseña</p>
+            <input type="password" id="clave-login" placeholder="Contraseña">
+            <button onclick="login()">Ingresar</button>
+            <div class="separador"></div>
+            <p>¿No tienes una cuenta?</p>
+            <button onclick="mostrarPestania('register')">Clic aquí para ir y crear una</button>
+        </div>
+    </section>
+    <section id="register" class="pestania" style="display: none;">
+        <img src="logo2.png" class="logo-grande" alt="Logo Union Platense">
+        <div class="recuadro">
+            <h2>Registrarte</h2>
+            <p>Introduzca un usuario (relacionado a DC)</p>
+            <input type="text" id="user-register" placeholder="Usuario">
+            <p>Introduzca una contraseña</p>
+            <input type="password" id="clave-register" placeholder="Contraseña">
+            <button onclick="register()">Crear cuenta</button>
+            <div class="separador"></div>
+            <p>¿Ya tienes una cuenta?</p>
+            <button onclick="mostrarPestania('login')">Clic aquí para ir a loguearte</button>
+        </div>
+    </section>
+    <section id="chofer" class="pestania" style="display: none;">
+        <img src="logo2.png" class="logo-grande" alt="Logo Union Platense">
+        <h1>Realizar planilla</h1>
+        <div class="recuadro">
+            <h2>Datos recorrido:</h2>
+            <button onclick="mostrarMenu('menu-ramales')">Seleccione un Ramal</button>
+            <button onclick="mostrarMenu('menu-internos')">Seleccione un Interno</button>
+        </div>
+        <div class="recuadro">
+            <h2>Horarios de la IDA:</h2>
+            <p>Horario de Salida:</p>
+            <input type="text" id="salida-ida">
+            <p>Horario de Llegada:</p>
+            <input type="text" id="llegada-ida">
+        </div>
+        <div class="recuadro">
+            <h2>Horarios de la VUELTA:</h2>
+            <p>Horario de Salida:</p>
+            <input type="text" id="salida-vuelta">
+            <p>Horario de Llegada:</p>
+            <input type="text" id="llegada-vuelta">
+        </div>
+        <div class="recuadro">
+            <p>Cantidad de Planillas realizadas (total):</p>
+            <input type="number" id="planillas-total">
+            <button onclick="enviarPlanilla()">Enviar Planilla</button>
+        </div>
+    </section>
+    <section id="completado" class="pestania" style="display: none;">
+        <img src="logo2.png" class="logo-grande" alt="Logo Union Platense">
+        <h2 style="color:white;">Perfecto, ya se ha enviado la planilla.</h2>
+        <button onclick="mostrarPestania('login')">Volver al Login</button>
+    </section>
+    <div id="menu-ramales" class="menu" style="display:none;">
+        <h2>Seleccione un Ramal</h2>
+        <button onclick="seleccionarRamal('R1')">Ramal R1</button>
+        <button onclick="seleccionarRamal('R2')">Ramal R2</button>
+        <button onclick="cerrarMenu('menu-ramales')">Cerrar</button>
+    </div>
+    <div id="menu-internos" class="menu" style="display:none;">
+        <h2>Seleccione un Interno</h2>
+        <button onclick="seleccionarInterno('101')">Interno 101</button>
+        <button onclick="seleccionarInterno('102')">Interno 102</button>
+        <button onclick="cerrarMenu('menu-internos')">Cerrar</button>
+    </div>
+    <script src="script.js"></script>
+    <script type="module" src="script2.js"></script>
+</body>
+</html>
