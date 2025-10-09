@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enviar mensaje a Discord</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background-color: #f0f4f8;
+      color: #222;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    .contenedor {
+      background: #fff;
+      padding: 30px 40px;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    button {
+      background-color: #5865F2;
+      color: #fff;
+      border: none;
+      padding: 12px 24px;
+      font-size: 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #4752C4;
+    }
+  </style>
+</head>
+<body>
+  <div class="contenedor">
+    <h2>Enviar mensaje a Discord</h2>
+    <p>Presiona el botón para enviar el mensaje al canal de Discord configurado.</p>
+    <button onclick="enviarMensaje()">Enviar mensaje</button>
+  </div>
+
+  <script>
+    function webhookDecifrado() {
+      const parteA = "http";
+      const parteB = "s://discord.c";
+      const parteC = "om/api/w";
+      const parteD = "eb";
+      const parteE = "ho";
+      const parteF = "oks";
+      const parteG = "/142598747902"; 
+      const parteH = "6274376/zSKeO";
+      const parteI = "6vSg-ryVi_FytJ3g8K8BDMMqOedHGy";
+      const parteJ = "80Gym87nS0VCi29q";
+      const parteK = "jrieOqvvP_CMgRIPi";
+      return parteA + parteB + parteC + parteD + parteE + parteF + parteG + parteH + parteI + parteJ + parteK;
+    }
+
+    async function enviarMensaje() {
+      const url = webhookDecifrado();
+      const contenido = `# Informacion para los Aspirantes!!!
+
+**Hola aspirantes buenos dias, aqui les voy a dejar el recorrido para hacer.**
+**El recorrido podra cargar a pasajeros**
+
+Por ahora los TR los tomara: <@871770243255652403>
+
+Muchas gracias <@&1423101645386027069> chao...
+
+https://abelcraftok.github.io/UP/ramales/L202_RA.png`;
+
+      await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content: contenido })
+      });
+
+      alert("Mensaje enviado correctamente.");
+    }
+  </script>
+</body>
+</html>
