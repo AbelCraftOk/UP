@@ -11,22 +11,20 @@ function mostrarMenu(id) {
 function cerrarMenu(id) {
     document.getElementById(id).style.display = 'none';
 }
-function seleccionarRamal(ramal) {
-  if (!ramal) return alert("No se seleccionó ningún ramal.");
-  ramalSeleccionado = ramal;
-  const labelRamal = document.getElementById("ramal-seleccionado");
-  if (labelRamal) labelRamal.textContent = "Ramal: " + ramalSeleccionado;
-  cerrarMenu('menu-ramales');
+
+const selectRamal = document.getElementById("select-ramal");
+const selectInterno = document.getElementById("select-interno");
+
+selectRamal.addEventListener("change", () => {
+  ramalSeleccionado = selectRamal.value;
   console.log("Ramal seleccionado:", ramalSeleccionado);
-}
-function seleccionarInterno(interno) {
-  if (!interno) return alert("No se seleccionó ningún interno.");
-  internoSeleccionado = interno;
-  const labelInterno = document.getElementById("interno-seleccionado");
-  if (labelInterno) labelInterno.textContent = "Interno: " + internoSeleccionado;
-  cerrarMenu('menu-internos');
+});
+
+selectInterno.addEventListener("change", () => {
+  internoSeleccionado = selectInterno.value;
   console.log("Interno seleccionado:", internoSeleccionado);
-}
+});
+
 function limpiarCampos() {
     document.getElementById("salida-ida").value = "";
     document.getElementById("llegada-ida").value = "";

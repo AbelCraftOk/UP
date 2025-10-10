@@ -79,18 +79,18 @@ async function login() {
 window.login = login;
 async function enviarPlanilla() {
   try {
+    const ramalSeleccionado = document.getElementById("select-ramal").value;
+    const internoSeleccionado = document.getElementById("select-interno").value;
+    if (!usuarioLogueado) return alert("Debes iniciar sesión.");
+    if (!ramalSeleccionado) return alert("Debes seleccionar un ramal.");
+    if (!internoSeleccionado) return alert("Debes seleccionar un interno.");
     const salidaIda = document.getElementById("salida-ida").value.trim();
     const llegadaIda = document.getElementById("llegada-ida").value.trim();
     const salidaVuelta = document.getElementById("salida-vuelta").value.trim();
     const llegadaVuelta = document.getElementById("llegada-vuelta").value.trim();
     const planillasTotal = document.getElementById("planillas-total").value.trim();
-    if (!usuarioLogueado) return alert("Debes iniciar sesión.");
-    if (!ramalSeleccionado || ramalSeleccionado === "No seleccionado")
-      return alert("Debes seleccionar un ramal.");
-    if (!internoSeleccionado || internoSeleccionado === "No seleccionado")
-      return alert("Debes seleccionar un interno.");
     if (!salidaIda || !llegadaIda || !salidaVuelta || !llegadaVuelta || !planillasTotal)
-      return alert("Completa todos los campos antes de enviar la planilla.");
+      return alert("Completa todos los campos antes de enviar.");
     const datos = {
       chofer: usuarioLogueado,
       interno: internoSeleccionado,
@@ -118,7 +118,7 @@ async function enviarPlanilla() {
             { name: "↩️ Horario VUELTA", value: `Salida: ${datos.salida_vuelta}\nLlegada: ${datos.llegada_vuelta}` },
             { name: "📄 Planillas Totales", value: datos.planillas_total, inline: true }
           ],
-          footer: { text: "Sistema de Planillas • Unión Platense", icon_url: "https://i.imgur.com/qyRSmTj.png" },
+          footer: { text: "Sistema de Planillas • Unión Platense" },
           timestamp: new Date().toISOString()
         }]
       })
