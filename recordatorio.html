@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recordatorio</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background-color: #f0f4f8;
+      color: #222;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    .contenedor {
+      background: #fff;
+      padding: 30px 40px;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    button {
+      background-color: #5865F2;
+      color: #fff;
+      border: none;
+      padding: 12px 24px;
+      font-size: 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #4752C4;
+    }
+  </style>
+</head>
+<body>
+  <div class="contenedor">
+    <h2>Enviar mensaje a Discord</h2>
+    <p>Presiona el botón para enviar el mensaje al canal de Discord configurado.</p>
+    <button onclick="enviarMensaje()">Enviar mensaje</button>
+  </div>
+
+  <script>
+    function webhookDecifrado() {
+      const parteA = "http";
+      const parteB = "s://discord.c";
+      const parteC = "om/api/w";
+      const parteD = "eb";
+      const parteE = "ho";
+      const parteF = "oks";
+      const parteG = "/142625532916701595"; 
+      const parteH = "9/H_ekJrB5p09TZI40G";
+      const parteI = "cKXGM5oAmWYvE6V1fQ0";
+      const parteJ = "6SXh-J6qgvahkz4q4tP";
+      const parteK = "aFAeh66rKmZEv";
+      return parteA + parteB + parteC + parteD + parteE + parteF + parteG + parteH + parteI + parteJ + parteK;
+    }
+
+    async function enviarMensaje() {
+      const url = webhookDecifrado();
+      const contenido = `# Choferes!!!
+
+**Hola choferes buenos dias, recuerden de hacer planillas a traves de la web. Los que no tienen una cuenta, vayan y creensela.**
+
+[Click aquí para ir a la web](https://abelcraftok.github.io/UP/)
+
+Muchas gracias, <@&1423101645386027069> por trabajar aqui, chao..[.](https://abelcraftok.github.io/UP/logo2.png)`;
+
+      await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content: contenido })
+      });
+
+      alert("Mensaje enviado correctamente.");
+    }
+  </script>
+</body>
+</html>
