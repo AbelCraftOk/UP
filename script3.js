@@ -118,7 +118,7 @@ async function enviarPlanilla() {
             { name: "↩️ Horario VUELTA", value: `Salida: ${datos.salida_vuelta}\nLlegada: ${datos.llegada_vuelta}` },
             { name: "📄 Planillas Totales", value: datos.planillas_total, inline: true }
           ],
-          footer: { text: "Sistema de Planillas • Unión Platense • Planilla en Belgrano" },
+          footer: { text: "Sistema de Planillas • Unión Platense • Planilla en PBA" },
           timestamp: new Date().toISOString()
         }]
       })
