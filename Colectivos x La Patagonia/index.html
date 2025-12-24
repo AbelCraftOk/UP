@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Colectivos x La Patagonia</title>
+    <link rel="icon" href="logo.webp">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: sans-serif;
+            background: #f2f2f2;
+            color: #333;
+        }
+        header {
+            background: #e0e0e0;
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #ccc;
+        }
+        img.logo {
+            max-width: 150px;
+        }
+        .tab {
+            display: none;
+            padding: 20px;
+            max-width: 1000px;
+            margin: auto;
+        }
+        .card {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        button {
+            background: #bdbdbd;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+        button:hover {
+            background: #9e9e9e;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background: #dcdcdc;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid #bbb;
+        }
+    </style>
+</head>
+
+<body onload="mostrarPestania('inicio')">
+
+<header>
+    <img src="logo.webp" class="logo">
+</header>
+
+<!-- INICIO -->
+<div id="inicio" class="tab">
+    <img src="logo.webp" class="logo">
+    <h1>Bienvenidos a Colectivos x La Patagonia</h1>
+    <p>Este es un proyecto que recien inicia y esta basado mas que nada en la recrecion de La Patagonia y la zona platense. Nuestro objetivo es proporcionar información precisa y actualizada para mejorar la experiencia de los usuarios.</p>
+
+    <div class="card">
+        <h2>Formularios para aplicar a empresas</h2>
+        <p>A continuacion encontraras los formularios necesarios para aplicar a las diferentes empresas de transporte.</p>
+        <p>Recorda que puede de que los formularios esten cerrados.</p>
+        <button onclick="mostrarPestania('formularios-de-empresas')">Ir a ver los Formularios</button>
+    </div>
+
+    <div class="card">
+        <img src="logo-UP.png" class="logo">
+        <h2>Recuento de Planillas de Union Platense</h2>
+        <p>Deberas tener la clave necesaria para acceder al recuento...</p>
+        <button onclick="pedirClaveUP()">Ver recuento</button>
+    </div>
+</div>
+
+<!-- FORMULARIOS -->
+<div id="formularios-de-empresas" class="tab">
+    <img src="logo.webp" class="logo">
+    <h1>Formularios para aplicar a empresas</h1>
+
+    <div class="card">
+        <h2>Transporte 27 de Mayo</h2>
+        <button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSeZ-3cFb8-XE3JnUt0DgPvbBc-rhOnm8FgBUv0qNH8ujWZ45w/viewform?usp=header')">Ir al Formulario</button>
+    </div>
+
+    <div class="card">
+        <h2>Union Platense - Chofer</h2>
+        <button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLSdu29P-jzCl2Xr2WLz-A3VohF5OPrCdyg04WacPEXC3ZpWt5w/viewform?usp=header')">Ir al Formulario</button>
+    </div>
+
+    <div class="card">
+        <h2>Union Platense - Inspector</h2>
+        <button onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLScs7qBRgEOE-ApBK-q1vU8In7mZ69uKl8Jr9Tx_AHaE8qjE1g/viewform?usp=header')">Ir al Formulario</button>
+    </div>
+</div>
+
+<!-- RECUENTO -->
+<div id="recuento-up" class="tab">
+    <img src="logo-UP.png" class="logo">
+    <h1>Recuento de Planillas de Union Platense</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>CHOFER</th>
+                <th>INTERNO 1</th>
+                <th>INTERNO 2</th>
+                <th>INTERNO 3</th>
+                <th>TOTAL</th>
+                <th>LINEAS</th>
+            </tr>
+        </thead>
+        <tbody id="tabla-up"></tbody>
+    </table>
+
+    <button onclick="mostrarPestania('inicio')">Volver al Inicio</button>
+    <button onclick="cargarPlanillasUP()">ReLoad</button>
+</div>
+
+<!-- PLANILLAS -->
+<div id="planillas-up" class="tab">
+    <img src="logo-UP.png" class="logo">
+    <h1>Carga de Planillas - Union Platense</h1>
+
+    <div class="card">
+        <input id="chofer-name" placeholder="Nombre del Chofer">
+        <input id="interno-1" type="number" placeholder="Interno 1">
+        <input id="interno-2" type="number" placeholder="Interno 2">
+        <input id="interno-3" type="number" placeholder="Interno 3">
+        <input id="linea-1" placeholder="Linea 1">
+        <input id="linea-2" placeholder="Linea 2">
+        <input id="linea-3" placeholder="Linea 3">
+        <button onclick="cargarPlanillaUP()">Cargar Planilla</button>
+    </div>
+</div>
+
+<script src="script.js"></script>
+<script src="script2.js"></script>
+</body>
+</html>
