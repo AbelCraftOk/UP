@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Tabla para Discord</title>
+<style>
+  body {
+    font-family: system-ui, sans-serif;
+    background: #111;
+    color: #eee;
+    padding: 20px;
+  }
+  input, button, textarea {
+    margin: 4px;
+    padding: 6px;
+    background: #222;
+    color: #eee;
+    border: 1px solid #444;
+  }
+  table {
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  td, th {
+    border: 1px solid #444;
+    padding: 6px;
+    min-width: 80px;
+    text-align: center;
+  }
+  button {
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+
+<h2>Tabla para Discord (Webhook)</h2>
+
+<div>
+  <label>Webhook:</label><br>
+  <input id="webhook" style="width: 500px">
+</div>
+
+<div>
+  <button onclick="addColumn()">➕ Columna</button>
+  <button onclick="addRow()">➕ Fila</button>
+</div>
+
+<table id="tabla">
+  <thead>
+    <tr>
+      <th contenteditable>Columna 1</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td contenteditable>Dato</td>
+    </tr>
+  </tbody>
+</table>
+
+<div style="margin-top:10px">
+  <button onclick="enviar()">📤 Enviar a Discord</button>
+  <button onclick="guardarJSON()">💾 Guardar JSON</button>
+  <input type="file" onchange="cargarJSON(event)">
+</div>
+
+<script>
+function addColumn() {
+  const th = document.createElement("th");
+  th.contentEditable = true;
+  th.textContent = "Nueva columna";
+  document.querySelector("thead tr").appendChild(th);
+
+  document.querySelectorAll("tbody tr").forEach(tr => {
+    const td = document.createElement("td");
+    td.contentEditable = true;
+    td.textContent = "";
+    tr.appendChild(td);
+  });
+}
+
+function addRow() {
+  const tr = document.createElement("tr");
+  const cols = document.querySelectorAll("thead th").length;
+  for (let i = 0; i < cols; i++) {
+    const td = document.createElement("td");
+    td.contentEditable = true;
+    td.textContent = "";
+    tr.appendChild(td);
+  }
+  document.querySelector("tbody").appendChild(tr);
+}
+
+function getTableData() {
+  const headers = [...document.querySelectorAll("thead th")].map(th => th.textContent);
+  const rows = [...document.querySelectorAll("tbody tr")].map(tr =>
+    [...tr.children].map(td => td.textContent)
+  );
+  return { headers, rows };
+}
+
+function toDiscordTable(data) {
+  const widths = data.headers.map((h, i) =>
+    Math.max(h.length, ...data.rows.map(r => (r[i] || "").length))
+  );
+
+  const formatRow = row =>
+    row.map((cell, i) => cell.padEnd(widths[i])).join(" | ");
+
+  let text = formatRow(data.headers) + "\n";
+  text += widths.map(w => "-".repeat(w)).join("-|-") + "\n";
+  data.rows.forEach(r => text += formatRow(r) + "\n");
+
+  return "```" + text + "```";
+}
+
+async function enviar() {
+  const webhook = document.getElementById("webhook").value;
+  if (!webhook) return alert("Falta el webhook");
+
+  const data = getTableData();
+  const content = toDiscordTable(data);
+
+  await fetch(webhook, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ content })
+  });
+
+  alert("Enviado a Discord");
+}
+
+function guardarJSON() {
+  const data = getTableData();
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "tabla.json";
+  a.click();
+}
+
+function cargarJSON(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = () => {
+    const data = JSON.parse(reader.result);
+
+    const thead = document.querySelector("thead tr");
+    const tbody = document.querySelector("tbody");
+    thead.innerHTML = "";
+    tbody.innerHTML = "";
+
+    data.headers.forEach(h => {
+      const th = document.createElement("th");
+      th.contentEditable = true;
+      th.textContent = h;
+      thead.appendChild(th);
+    });
+
+    data.rows.forEach(r => {
+      const tr = document.createElement("tr");
+      r.forEach(c => {
+        const td = document.createElement("td");
+        td.contentEditable = true;
+        td.textContent = c;
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+    });
+  };
+  reader.readAsText(file);
+}
+</script>
+
+</body>
+</html>
